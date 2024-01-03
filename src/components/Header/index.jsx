@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import { allImages } from "../../utils/constants";
 
 const Header = () => {
-  const isAuthenticated = true;
-  const isUserAuthenticated = true;
+  const isAuthenticated = false;
+  const isUserAuthenticated = false;
   const [isDropdownOpen, setDropdownOpen] = useState(false);
 
   const getFirstLetter = (email) => {
