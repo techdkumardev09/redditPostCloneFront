@@ -4,6 +4,8 @@ import Header from "./components/Header";
 import Home from "./pages/Home";
 import Signup from "./components/Auth/Signup";
 import Login from "./components/Auth/Login";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -16,6 +18,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
         </Routes>
       </div>
+      <ToastContainer />
     </BrowserRouter>
   );
 }

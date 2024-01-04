@@ -81,11 +81,11 @@ const Header = () => {
         ) : (
           <div>
             <nav className="space-x-4">
-              <Link to="/signup" className="text-white">
-                Sign up
+              <Link to="/login" className="text-white">
+                Login
               </Link>
-              <Link to="/signin" className="text-white">
-                Sign in
+              <Link to="/signup" className="text-white">
+                Register
               </Link>
             </nav>
           </div>

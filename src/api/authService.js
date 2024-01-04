@@ -2,7 +2,7 @@
 
 import axios from 'axios';
 
-const BASE_URL = 'https://your-api-base-url.com'; // Replace with your actual API base URL
+const BASE_URL = 'http://localhost:8082/api';
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -10,7 +10,7 @@ export const api = axios.create({
 
 export const login = async (credentials) => {
   try {
-    const response = await api.post('/login', credentials);
+    const response = await api.post('users/login', credentials);
     return response.data;
   } catch (error) {
     throw error.response.data;
@@ -19,7 +19,7 @@ export const login = async (credentials) => {
 
 export const signup = async (userData) => {
   try {
-    const response = await api.post('/signup', userData);
+    const response = await api.post('/users/signup', userData);
     return response.data;
   } catch (error) {
     throw error.response.data;
