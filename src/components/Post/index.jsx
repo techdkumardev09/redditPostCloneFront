@@ -2,32 +2,20 @@
 
 import React, { useState } from "react";
 import Comment from "../Comments";
-import { addComment, likePost } from "../../api/postService";
 
-const Post = ({ post }) => {
-  const [likes, setLikes] = useState(post.likes);
-  const [comments, setComments] = useState(post.comments);
+const Post = ({ post, handleLike, handleComment, repliesHandler }) => {
+  const [likes] = useState(post.likes.length);
   const [newComment, setNewComment] = useState("");
   const [showCommentSection, setshowCommentSection] = useState(false);
 
-  const handleLike = async (id) => {
-    console.log('====', id)
-    try {
-      await likePost(post.id);
-      setLikes(likes + 1);
-    } catch (error) {
-      console.error("Error liking post:", error);
-    }
+  const handleCommentInside = async (id, newComment) => {
+    handleComment(id, newComment);
+    setNewComment("");
   };
 
-  const handleComment = async () => {
-    if (newComment.trim() !== "") {
-      const fetchedComments = await addComment(post.id);
-      setComments(fetchedComments);
-      setNewComment("");
-    }
-  };
-
+  const repliesHandlers = () => {
+    repliesHandler()
+  }
   return (
     <div className="bg-gray-100 p-4 my-4 rounded-lg shadow-md mb-8">
       <div className="flex items-center mb-4">
@@ -46,7 +34,7 @@ const Post = ({ post }) => {
       <hr className="my-4 border-t border-gray-300" />
       <div className="flex justify-between mt-4">
         <button className="text-blue-500" onClick={() => handleLike(post.id)}>
-          {likes} Like
+          {likes.length > 0 && likes.length} Like
         </button>
         <button
           className="text-gray-500"
@@ -69,16 +57,16 @@ const Post = ({ post }) => {
             </div>
             <button
               className="bg-blue-500 text-white p-2 rounded-md"
-              onClick={handleComment}
+              onClick={() => handleCommentInside(post.id, newComment)}
             >
               Post Comment
             </button>
           </div>
 
           <div className="mt-4">
-            {comments.map((comment) => (
+            {post.comments.map((comment) => (
               <div key={comment.id} className="text-gray-700">
-                <Comment key={comment.id} comment={comment} />
+                <Comment key={comment.id} id={comment.id} comment={comment} repliesHandler={repliesHandlers} />
               </div>
             ))}
           </div>

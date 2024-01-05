@@ -1,6 +1,6 @@
 // components/SignupForm.js
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -42,12 +42,19 @@ const Signup = () => {
           setTimeout(() => {
             navigate("/login");
           }, 2000);
-        } 
-      } catch(error) {
+        }
+      } catch (error) {
         toast.error(error?.message || "An error occurred");
       }
     },
   });
+
+  useEffect(() => {
+    const localToken = localStorage.getItem("jwtToken");
+    if (localToken) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-md shadow-md">

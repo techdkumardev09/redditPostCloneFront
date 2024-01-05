@@ -1,6 +1,6 @@
 // components/LoginForm.js
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -39,6 +39,13 @@ const Login = () => {
       }
     },
   });
+
+  useEffect(() => {
+    const localToken = localStorage.getItem("jwtToken");
+    if (localToken) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-md shadow-md">

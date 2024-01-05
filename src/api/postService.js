@@ -47,9 +47,17 @@ export const createPost = async (postData) => {
 
 export const likePost = async (postId) => {
   try {
-    const response = await axios.get(`${BASE_URL}/posts/${postId}/like/`, {
-      headers,
-    });
+    const accessToken = localStorage.getItem("jwtToken");
+    const response = await axios.post(
+      `${BASE_URL}/posts/${postId}/like/`,
+      null,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error.message;
@@ -58,12 +66,14 @@ export const likePost = async (postId) => {
 
 export const addComment = async (postId, commentText) => {
   try {
-    const response = await axios.post(
-      `${BASE_URL}/posts/${postId}/like`,
-      { text: commentText },
-      null,
-      { headers }
-    );
+    let data = {
+      post_id: postId,
+      text: commentText,
+    };
+    const response = await axios.post(`${BASE_URL}/comments/`, data, {
+      headers,
+    });
+
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error.message;
@@ -72,12 +82,17 @@ export const addComment = async (postId, commentText) => {
 
 export const replayComment = async (postId, commentText) => {
   try {
-    const response = await axios.post(
-      `${BASE_URL}/comment/${postId}/comments`,
-      { text: commentText },
-      null,
-      { headers }
-    );
+    let data = {
+      comment_id: postId,
+      text: commentText,
+    };
+    const accessToken = localStorage.getItem("jwtToken");
+    const response = await axios.post(`${BASE_URL}/replies/`, data, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
     return response.data;
   } catch (error) {
     throw error.response ? error.response.data : error.message;

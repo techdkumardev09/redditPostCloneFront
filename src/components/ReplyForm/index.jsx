@@ -7,7 +7,7 @@ const ReplyForm = ({ onReplySubmit }) => {
 
   const handleReplySubmit = () => {
     if (replyText.trim() !== '') {
-      onReplySubmit({ text: replyText, username: 'John Doe', userAvatar: 'https://via.placeholder.com/30' });
+      onReplySubmit({ text: replyText});
       setReplyText('');
     }
   };

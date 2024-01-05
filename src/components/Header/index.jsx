@@ -28,10 +28,6 @@ const Header = () => {
     navigate("/login");
   };
 
-  const openProfile = () => {
-    // write logic
-  };
-
   return (
     <header className="bg-black p-4">
       <div className="container mx-auto flex items-center justify-between">
@@ -58,17 +54,6 @@ const Header = () => {
             {isDropdownOpen && (
               <div className="absolute top-12 right-0 bg-white border rounded shadow-md w-48 z-50">
                 <ul>
-                  <li
-                    className="p-4 pl-6 cursor-pointer flex gap-4 text-lg items-center"
-                    onClick={openProfile}
-                  >
-                    <img
-                      alt="profile"
-                      src={allImages.userProfile}
-                      className="w-6 h-6"
-                    ></img>
-                    Profile
-                  </li>
                   <li
                     className=" p-4 pl-6 flex gap-4 text-lg cursor-pointer border-b border-gray-100 items-center"
                     onClick={handleLogout}

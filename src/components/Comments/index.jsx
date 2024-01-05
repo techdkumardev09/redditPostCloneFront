@@ -1,40 +1,48 @@
 // Comment.js
 
-import React, { useState } from 'react';
-import ReplyForm from '../ReplyForm';
+import React, { useState } from "react";
+import ReplyForm from "../ReplyForm";
+import { replayComment } from "../../api/postService";
+import { toast } from "react-toastify";
 
-
-const Comment = ({ comment }) => {
+const Comment = ({ comment, id, repliesHandler }) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
-  const [replies, setReplies] = useState(comment.replies || []);
 
-  const handleReplySubmit = (newReply) => {
-    
-    setReplies([...replies, { id: replies.length + 1, ...newReply, time: getCurrentTime() }]);
+
+  const handleReplySubmit = async (replyText) => {
+    await replayComment(id, replyText.text);
+    repliesHandler();
+    toast.success("replay added");
+    setShowReplyForm(false)
   };
 
   const getCurrentTime = () => {
     const now = new Date();
-    return `${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+    return `${now.getHours()}:${String(now.getMinutes()).padStart(2, "0")}`;
   };
 
   return (
     <div className="flex items-start mb-4">
       <img
-        src={comment.userAvatar || 'https://via.placeholder.com/30'}
+        src={comment.userAvatar || "https://via.placeholder.com/30"}
         alt="User Avatar"
         className="rounded-full w-5 h-5 mr-2"
       />
       <div>
         <div className="flex items-center mb-2">
-          <span className="font-semibold">{comment.username || 'Anonymous'}</span>
-          <span className="text-gray-500 ml-2">{comment.time || '12:00'}</span>
+          <span className="font-semibold">
+            {comment.username || "Anonymous"}
+          </span>
+          <span className="text-gray-500 ml-2">{comment.time || "12:00"}</span>
           <p className="ml-2">{comment.text}</p>
         </div>
-        {replies.length > 0 && (
+        {comment?.replies?.length > 0 && (
           <div className="ml-6">
-            {replies.map((reply) => (
-              <Comment key={reply.id} comment={reply} />
+            {comment.replies.map((reply) => (
+              <>
+                {" "}
+                <Comment id={reply.id} key={reply.id} comment={reply} repliesHandler={repliesHandler}/>
+              </>
             ))}
           </div>
         )}
@@ -43,7 +51,7 @@ const Comment = ({ comment }) => {
           className="text-blue-500 ml-6 cursor-pointer"
           onClick={() => setShowReplyForm(!showReplyForm)}
         >
-          {showReplyForm ? 'Cancel Reply' : 'Reply'}
+          {showReplyForm ? "Cancel Reply" : "Reply"}
         </button>
       </div>
     </div>
