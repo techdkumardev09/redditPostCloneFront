@@ -62,7 +62,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    console.log("-----useEffect");
+    // updend data
   }, [afterData]);
 
   return (

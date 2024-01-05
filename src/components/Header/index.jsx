@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const isAuthenticatedStorage = localStorage.getItem("user");
-  const user = useSelector(selectUser);
+  const user = useSelector(selectUser) || isAuthenticatedStorage;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -46,7 +46,7 @@ const Header = () => {
               Welcome,{user?.first_name}
             </p>
             <div
-              onClick={toggleDropdown}
+              onClick={() => toggleDropdown()}
               className="cursor-pointer rounded-full w-8 h-8 bg-white shadow-sm flex items-center justify-center text-blue-800 text-xl font-bold ml-3"
             >
               {user !== null && getFirstLetter(user?.first_name)}{" "}
