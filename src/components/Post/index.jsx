@@ -31,8 +31,8 @@ const Post = ({ post }) => {
         <span className="text-gray-700">{post.username || "John Doe"}</span>
       </div>
       <p className="text-gray-700 w-full text-base mb-3">{post.text}</p>
-      {post?.image && (
-        <img height="400" width="400" src={post?.image} alt="post-image" />
+      {post?.imageUrl && (
+        <img height="400" width="400" src={post?.imageUrl} alt="" />
       )}
       <hr className="my-4 border-t border-gray-300" />
       <div className="flex justify-between mt-4">

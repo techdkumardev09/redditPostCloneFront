@@ -1,59 +1,30 @@
-// slices/authSlice.js
+// authSlice.js
+import { createSlice } from '@reduxjs/toolkit';
 
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { login, signup } from '../../api/authService';
-
-export const loginUser = createAsyncThunk('auth/loginUser', async (credentials) => {
-  const response = await login(credentials);
-  return response;
-});
-
-export const signupUser = createAsyncThunk('auth/signupUser', async (userData) => {
-  const response = await signup(userData);
-  return response;
-});
-
-const authSlice = createSlice({
+export const authSlice = createSlice({
   name: 'auth',
   initialState: {
     user: null,
-    status: 'idle',
     error: null,
   },
   reducers: {
-    logoutUser: (state) => {
+    setUser: (state, action) => {
+      state.user = action.payload;
+      state.error = null;
+    },
+    setError: (state, action) => {
+      state.error = action.payload;
+    },
+    logout: (state) => {
       state.user = null;
-      state.status = 'idle';
       state.error = null;
     },
   },
-  extraReducers: (builder) => {
-    builder
-      .addCase(loginUser.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(loginUser.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.user = action.payload;
-      })
-      .addCase(loginUser.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      })
-      .addCase(signupUser.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(signupUser.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.user = action.payload;
-      })
-      .addCase(signupUser.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.error.message;
-      });
-  },
 });
 
-export const { logoutUser } = authSlice.actions;
+export const { setUser, setError, logout } = authSlice.actions;
+
+export const selectUser = (state) => state.auth.user;
+export const selectError = (state) => state.auth.error;
 
 export default authSlice.reducer;

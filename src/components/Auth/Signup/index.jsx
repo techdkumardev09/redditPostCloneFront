@@ -1,23 +1,18 @@
 // components/SignupForm.js
 
-import React, { useEffect, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-import { signupUser } from "../../../redux/slices/authSlice";
 import { toast } from "react-toastify";
 
 const Signup = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const authStatus = useSelector((state) => state.auth.status);
-  const authError = useSelector((state) => state.auth.error);
-  const isMounted = useRef(true);
 
   const formik = useFormik({
     initialValues: {
       name: "",
+      lastName: "",
       username: "",
       email: "",
       password: "",
@@ -30,33 +25,28 @@ const Signup = () => {
       password: Yup.string().required("Required"),
     }),
 
-    onSubmit: (values) => {
-      dispatch(signupUser(values));
+    onSubmit: async (values) => {
+      let obj = {
+        first_name: values.name,
+        last_name: values.lastName,
+        username: values.username,
+        email: values.email,
+        password: values.password,
+      };
+
+      try {
+        const signupResponse = await Signup(obj);
+        if (signupResponse) {
+          toast.success("Signup successful! Redirecting to login...");
+          setTimeout(() => {
+            navigate("/login");
+          }, 2000);
+        } 
+      } catch(error) {
+        toast.error(error?.message || "An error occurred");
+      }
     },
   });
-
-  useEffect(() => {
-    // Set isMounted to false when the component is unmounted
-    return () => {
-      isMounted.current = false;
-    };
-  }, []);
-
-  useEffect(() => {
-    if (isMounted.current) {
-      if (authStatus === "succeeded") {
-        toast.success("Signup successful! Redirecting to login...");
-        setTimeout(() => {
-          navigate("/login");
-        }, 2000); // Redirect after 2 seconds
-      } else if (authStatus === "failed") {
-        toast.error(authError);
-      }
-    }
-    return () => {
-      isMounted.current = false;
-    };
-  }, [authStatus, authError]);
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-md shadow-md">
@@ -80,6 +70,26 @@ const Signup = () => {
           />
           {formik.touched.name && formik.errors.name ? (
             <div className="text-red-500 text-sm">{formik.errors.name}</div>
+          ) : null}
+        </div>
+        <div>
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-600"
+          >
+            Last Name
+          </label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            value={formik.values.lastName}
+            className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-blue-300"
+          />
+          {formik.touched.lastName && formik.errors.lastName ? (
+            <div className="text-red-500 text-sm">{formik.errors.lastName}</div>
           ) : null}
         </div>
 
@@ -148,15 +158,10 @@ const Signup = () => {
 
         <button
           type="submit"
-          disabled={authStatus === "loading"}
           className="bg-blue-500 text-white py-2 px-4 rounded-md focus:outline-none focus:ring focus:border-blue-300"
         >
           Signup
         </button>
-
-        {authStatus === "failed" && (
-          <div className="text-red-500 text-sm">{authError}</div>
-        )}
       </form>
     </div>
   );

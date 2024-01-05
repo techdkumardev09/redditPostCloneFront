@@ -1,27 +1,42 @@
 // components/LoginForm.js
 
-import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { loginUser } from '../../../redux/slices/authSlice';
+import React from "react";
+import { useDispatch } from "react-redux";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../../api/authService";
+import { setUser } from "../../../redux/slices/authSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const authStatus = useSelector((state) => state.auth.status);
-  const authError = useSelector((state) => state.auth.error);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      username: "",
+      password: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().email('Invalid email address').required('Required'),
-      password: Yup.string().required('Required'),
+      username: Yup.string()
+        .required("Invalid email address")
+        .required("Required"),
+      password: Yup.string().required("Required"),
     }),
-    onSubmit: (values) => {
-      dispatch(loginUser(values));
+    onSubmit: async (values) => {
+      try {
+        const loginResponse = await login(values);
+        if (loginResponse) {
+          localStorage.setItem("jwtToken", loginResponse.access);
+          localStorage.setItem("user", loginResponse);
+          dispatch(setUser(loginResponse));
+          toast.success("Login successfully!");
+          navigate("/");
+        }
+      } catch (error) {
+        toast.error(error.message || "An error occurred");
+      }
     },
   });
 
@@ -30,25 +45,31 @@ const Login = () => {
       <h2 className="text-2xl font-semibold mb-4">Login</h2>
       <form onSubmit={formik.handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-600">
+          <label
+            htmlFor="email"
+            className="block text-sm font-medium text-gray-600"
+          >
             Email
           </label>
           <input
-            type="email"
-            id="email"
-            name="email"
+            type="text"
+            id="username"
+            name="username"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            value={formik.values.email}
+            value={formik.values.username}
             className="mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-blue-300"
           />
-          {formik.touched.email && formik.errors.email ? (
-            <div className="text-red-500 text-sm">{formik.errors.email}</div>
+          {formik.touched.username && formik.errors.username ? (
+            <div className="text-red-500 text-sm">{formik.errors.username}</div>
           ) : null}
         </div>
 
         <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-600">
+          <label
+            htmlFor="password"
+            className="block text-sm font-medium text-gray-600"
+          >
             Password
           </label>
           <input
@@ -67,13 +88,10 @@ const Login = () => {
 
         <button
           type="submit"
-          disabled={authStatus === 'loading'}
           className="bg-blue-500 text-white py-2 px-4 rounded-md focus:outline-none focus:ring focus:border-blue-300"
         >
           Login
         </button>
-
-        {authStatus === 'failed' && <div className="text-red-500 text-sm">{authError}</div>}
       </form>
     </div>
   );

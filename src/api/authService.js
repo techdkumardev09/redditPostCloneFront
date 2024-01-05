@@ -1,27 +1,37 @@
 // api/authService.js
 
-import axios from 'axios';
+import axios from "axios";
+import { toast } from "react-toastify";
 
-const BASE_URL = 'http://localhost:8082/api';
+// const BASE_URL = "https://techdkumardev0944.pythonanywhere.com/api";
+const BASE_URL = "https://redditclonebackend.onrender.com/api";
 
 export const api = axios.create({
   baseURL: BASE_URL,
 });
 
+const headers = {
+  "Content-Type": "application/json",
+};
+
 export const login = async (credentials) => {
   try {
-    const response = await api.post('users/login', credentials);
+    const response = await api.post("/token/", credentials, {
+      headers: headers,
+    });
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    toast.error(error.response.data.detail);
   }
 };
 
 export const signup = async (userData) => {
   try {
-    const response = await api.post('/users/signup', userData);
+    const response = await api.post("/register/", userData, {
+      headers: headers,
+    });
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    toast.error(error.response.data.detail);
   }
 };

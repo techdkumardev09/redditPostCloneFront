@@ -17,11 +17,6 @@ const PostForm = ({ onPostSubmit }) => {
       onPostSubmit({
         text: postText,
         title: postTitle,
-        likes: 0,
-        comments: [],
-        postTime: getCurrentTime(),
-        userAvatar: 'https://via.placeholder.com/40',
-        username: 'John Doe',
       });
       setPostText('');
       setPostTitle('');
