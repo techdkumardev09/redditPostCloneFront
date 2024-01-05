@@ -11,7 +11,7 @@ const Post = ({ post }) => {
   const [showCommentSection, setshowCommentSection] = useState(false);
 
   const handleLike = async (id) => {
-    // setLikes(likes + 1);
+    console.log('====', id)
     try {
       await likePost(post.id);
       setLikes(likes + 1);
@@ -23,7 +23,6 @@ const Post = ({ post }) => {
   const handleComment = async () => {
     if (newComment.trim() !== "") {
       const fetchedComments = await addComment(post.id);
-      // setComments([...comments, { id: comments.length + 1, text: newComment }]);
       setComments(fetchedComments);
       setNewComment("");
     }
@@ -39,6 +38,7 @@ const Post = ({ post }) => {
         />
         <span className="text-gray-700">{post.username || "John Doe"}</span>
       </div>
+      <p className="text-gray-700 w-full text-base mb-3">{post.title}</p>
       <p className="text-gray-700 w-full text-base mb-3">{post.text}</p>
       {post?.imageUrl && (
         <img height="400" width="400" src={post?.imageUrl} alt="" />
@@ -46,13 +46,13 @@ const Post = ({ post }) => {
       <hr className="my-4 border-t border-gray-300" />
       <div className="flex justify-between mt-4">
         <button className="text-blue-500" onClick={() => handleLike(post.id)}>
-          ({likes}) Like
+          {likes} Like
         </button>
         <button
           className="text-gray-500"
           onClick={() => setshowCommentSection(!showCommentSection)}
         >
-          {post?.comments?.length} Comments{" "}
+          {post?.comments?.length > 0 && post?.comments?.length} Comments{" "}
         </button>
       </div>
       {showCommentSection && (

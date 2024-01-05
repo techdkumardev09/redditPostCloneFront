@@ -2,7 +2,6 @@ import axios from "axios";
 
 const accessToken = localStorage.getItem("jwtToken");
 const BASE_URL = "https://liberating-rose-hour.glitch.me/api";
-// const BASE_URL = "https://redditclonebackend.onrender.com/api";
 
 const instance = axios.create({
   baseURL: BASE_URL,
@@ -30,8 +29,15 @@ export const getPosts = async () => {
 
 export const createPost = async (postData) => {
   try {
-    const response = instance.post("/posts/", null, postData);
-    const createdPost = response;
+    const accessToken = localStorage.getItem("jwtToken");
+    const response = await axios.post(`${BASE_URL}/posts/`, postData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    const createdPost = response.data;
     return createdPost;
   } catch (error) {
     console.error("Error creating post:", error);
@@ -41,7 +47,7 @@ export const createPost = async (postData) => {
 
 export const likePost = async (postId) => {
   try {
-    const response = await axios.post(`${BASE_URL}/posts/${postId}/like`, {
+    const response = await axios.get(`${BASE_URL}/posts/${postId}/like/`, {
       headers,
     });
     return response.data;
@@ -53,7 +59,7 @@ export const likePost = async (postId) => {
 export const addComment = async (postId, commentText) => {
   try {
     const response = await axios.post(
-      `${BASE_URL}/posts/${postId}/comments`,
+      `${BASE_URL}/posts/${postId}/like`,
       { text: commentText },
       null,
       { headers }
@@ -67,7 +73,7 @@ export const addComment = async (postId, commentText) => {
 export const replayComment = async (postId, commentText) => {
   try {
     const response = await axios.post(
-      `${BASE_URL}/posts/${postId}/comments`,
+      `${BASE_URL}/comment/${postId}/comments`,
       { text: commentText },
       null,
       { headers }
