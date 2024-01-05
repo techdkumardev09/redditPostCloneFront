@@ -109,14 +109,16 @@ const Home = () => {
   ];
   const dispatch = useDispatch();
   const postsData = useSelector((state) => state.post);
-  const [posts, setPosts] = useState(dummyData);
+  const [posts, setPosts] = useState([]);
   console.log(postsData);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const fetchedPosts = await getPosts();
-        dispatch(setPosts(fetchedPosts));
+        console.log(fetchedPosts);
+        setPosts(fetchedPosts);
+        // dispatch(setPosts(fetchedPosts));
       } catch (error) {
         console.log(error);
       }
@@ -137,7 +139,7 @@ const Home = () => {
   return (
     <div className="container mx-auto mt-8 max-w-[840px] px-8">
       <PostForm onPostSubmit={handlePostSubmit} />
-      {dummyData.map((post) => (
+      {posts.map((post) => (
         <Post key={post.id} post={post} />
       ))}
     </div>

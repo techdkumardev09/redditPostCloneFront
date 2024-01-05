@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Comment from "../Comments";
+import { addComment, likePost } from "../../api/postService";
 
 const Post = ({ post }) => {
   const [likes, setLikes] = useState(post.likes);
@@ -9,13 +10,21 @@ const Post = ({ post }) => {
   const [newComment, setNewComment] = useState("");
   const [showCommentSection, setshowCommentSection] = useState(false);
 
-  const handleLike = () => {
-    setLikes(likes + 1);
+  const handleLike = async (id) => {
+    // setLikes(likes + 1);
+    try {
+      await likePost(post.id);
+      setLikes(likes + 1);
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
   };
 
-  const handleComment = () => {
+  const handleComment = async () => {
     if (newComment.trim() !== "") {
-      setComments([...comments, { id: comments.length + 1, text: newComment }]);
+      const fetchedComments = await addComment(post.id);
+      // setComments([...comments, { id: comments.length + 1, text: newComment }]);
+      setComments(fetchedComments);
       setNewComment("");
     }
   };
@@ -36,10 +45,13 @@ const Post = ({ post }) => {
       )}
       <hr className="my-4 border-t border-gray-300" />
       <div className="flex justify-between mt-4">
-        <button className="text-blue-500" onClick={handleLike}>
+        <button className="text-blue-500" onClick={() => handleLike(post.id)}>
           ({likes}) Like
         </button>
-        <button className="text-gray-500" onClick={() => setshowCommentSection(!showCommentSection) }>
+        <button
+          className="text-gray-500"
+          onClick={() => setshowCommentSection(!showCommentSection)}
+        >
           {post?.comments?.length} Comments{" "}
         </button>
       </div>
@@ -66,7 +78,7 @@ const Post = ({ post }) => {
           <div className="mt-4">
             {comments.map((comment) => (
               <div key={comment.id} className="text-gray-700">
-                 <Comment key={comment.id} comment={comment} />
+                <Comment key={comment.id} comment={comment} />
               </div>
             ))}
           </div>

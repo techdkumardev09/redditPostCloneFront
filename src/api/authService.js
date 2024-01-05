@@ -3,8 +3,8 @@
 import axios from "axios";
 import { toast } from "react-toastify";
 
-// const BASE_URL = "https://techdkumardev0944.pythonanywhere.com/api";
-const BASE_URL = "https://redditclonebackend.onrender.com/api";
+const BASE_URL = "https://liberating-rose-hour.glitch.me/api";
+// const BASE_URL = "https://redditclonebackend.onrender.com/api";
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -25,7 +25,7 @@ export const login = async (credentials) => {
   }
 };
 
-export const signup = async (userData) => {
+export const signupUser = async (userData) => {
   try {
     const response = await api.post("/register/", userData, {
       headers: headers,

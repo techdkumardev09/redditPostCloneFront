@@ -5,6 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { signupUser } from "../../../api/authService";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const Signup = () => {
       };
 
       try {
-        const signupResponse = await Signup(obj);
+        const signupResponse = await signupUser(obj);
         if (signupResponse) {
           toast.success("Signup successful! Redirecting to login...");
           setTimeout(() => {

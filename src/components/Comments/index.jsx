@@ -9,6 +9,7 @@ const Comment = ({ comment }) => {
   const [replies, setReplies] = useState(comment.replies || []);
 
   const handleReplySubmit = (newReply) => {
+    
     setReplies([...replies, { id: replies.length + 1, ...newReply, time: getCurrentTime() }]);
   };
 
@@ -30,7 +31,6 @@ const Comment = ({ comment }) => {
           <span className="text-gray-500 ml-2">{comment.time || '12:00'}</span>
           <p className="ml-2">{comment.text}</p>
         </div>
-        {console.log('=====replies', comment)}
         {replies.length > 0 && (
           <div className="ml-6">
             {replies.map((reply) => (
